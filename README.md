@@ -69,7 +69,7 @@ failure investigation.
 
 ```
 CompReg/
-├── README.md, LICENSE, pyproject.toml, CMakeLists.txt, CTestConfig.cmake
+├── README.md, LICENSE, .gitignore, pyproject.toml, CMakeLists.txt, CTestConfig.cmake
 ├── config/default.toml          # all thresholds/timeouts/paths
 ├── src/compreg/                 # Python framework (stdlib-only runtime)
 │   ├── cli.py  config.py  models.py  util.py
@@ -185,3 +185,51 @@ the design would extend, so the boundary is explicit:
 - The CPU-only constraint was a design choice to keep the portfolio runnable
   anywhere; nothing in the architecture assumes a CPU compiler beyond the
   two shipped adapters.
+
+## Documentation
+
+- [docs/architecture.md](docs/architecture.md) — module responsibilities
+- [docs/installation.md](docs/installation.md) — Windows / Linux / WSL setup
+- [docs/usage.md](docs/usage.md) — command reference + examples
+- [docs/testing.md](docs/testing.md) — test map + observed results
+- [docs/reporting.md](docs/reporting.md) — report schema + CSV columns
+- [docs/limitations.md](docs/limitations.md) — honest boundaries
+
+## Repository hygiene
+
+CompReg creates machine-specific outputs while running verification, benchmarks,
+triage, and demonstrations. These are runtime artifacts, not source files, and
+should generally not be committed:
+
+- `.venv/` or `venv/` — local Python environments; recreate them from the
+  dependency files instead of sharing them.
+- `artifacts/` — generated reports, logs, benchmark outputs, SQLite databases,
+  and compiled test binaries. The demo scripts recreate their outputs.
+- `dist/`, `build/`, `cmake-build*/`, `.pytest_cache/`, `__pycache__/`, and
+  `*.pyc` — generated packaging, build, and cache files.
+- `.git/` — local Git repository metadata. **Keep this directory in your
+  working checkout**; it is not source content and should not be manually
+  deleted to clean the project. Git does not push `.git/` as part of a commit.
+
+The repository's `.gitignore` excludes the common generated paths. Before
+committing, review the staged files:
+
+```bash
+git status --short
+git diff --cached --stat
+```
+
+If generated files were accidentally tracked in an earlier commit, add the
+appropriate paths to `.gitignore` and untrack them without deleting local copies:
+
+```bash
+git rm -r --cached --ignore-unmatch .venv venv artifacts dist .pytest_cache
+```
+
+Then review `git status` and commit the intended changes. Back up any reports or
+databases you need before removing generated directories. Keep source code,
+tests, fixtures, configuration, documentation, and CI workflows in Git.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
