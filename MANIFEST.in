@@ -1,0 +1,36 @@
+# CompReg source-distribution manifest.
+# Ships: source code, test fixtures/expected outputs, tests, C++ project,
+# config, CI workflows, docs, demo scripts, license.
+# Excludes: runtime outputs, build dirs, caches, databases, compiled files.
+
+include README.md
+include LICENSE
+include pyproject.toml
+include requirements-dev.txt
+include CMakeLists.txt
+include CTestConfig.cmake
+include .gitignore
+
+graft src
+graft tests
+graft test_corpus
+graft cpp
+graft docs
+graft examples
+graft config
+graft scripts
+graft .github
+
+global-exclude *.py[cod]
+global-exclude __pycache__
+global-exclude *.db *.sqlite *.sqlite3 *.db-wal *.db-shm
+global-exclude .coverage
+global-exclude *.o *.obj *.a *.lib *.exe *.dll *.bin
+global-exclude CMakeCache.txt CMakeFiles
+
+prune artifacts
+prune .venv
+prune venv
+prune .pytest_cache
+prune .ruff_cache
+prune Testing

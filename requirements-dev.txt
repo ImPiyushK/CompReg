@@ -1,0 +1,5 @@
+# CompReg development dependencies.
+# The runtime package itself uses only the Python standard library (>= 3.11).
+pytest>=7.0
+cmake>=3.20        # pip wheel provides cmake + ctest binaries (useful when no system install exists)
+ninja>=1.10

@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "compreg"
+version = "1.0.0"
+description = "CompReg - Automated Compiler Verification & Regression Analysis (CPU-only framework)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+keywords = ["compiler", "verification", "regression", "testing", "benchmarking"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = []  # runtime uses the Python standard library only
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "cmake>=3.20", "ninja>=1.10"]
+test = ["pytest>=7.0"]
+
+[project.scripts]
+compreg = "compreg.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit", "tests/integration"]
+addopts = "-q"
+# TestOutcome/TestResult are dataclasses in compreg.models, not pytest classes.
+filterwarnings = ["ignore::pytest.PytestCollectionWarning"]
+markers = [
+    "slow: long-running tests (deselect with '-m \"not slow\"')",
+    "requires_compiler: test needs at least one installed C++ compiler",
+    "requires_clang: test needs Clang installed",
+]
+
+[tool.ruff]
+line-length = 110
