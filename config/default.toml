@@ -1,0 +1,50 @@
+# CompReg default configuration.
+# Override any value in a custom TOML file passed via `--config`, or with CLI flags.
+
+[compilers]
+# Compiler families to use. Missing families are reported transparently, never silently skipped.
+families = ["gcc", "clang"]
+
+[compiler_paths]
+# Optional explicit paths to the C++ driver executables. Empty means: search PATH.
+gcc = ""
+clang = ""
+
+[verification]
+std = "c++17"
+opt_levels = ["O0", "O1", "O2", "O3"]
+timeout_s = 10.0
+warnings = ["-Wall", "-Wextra"]
+extra_flags = []
+float_tolerance = 1.0e-9
+
+[benchmark]
+reps = 7
+warmup = 2
+# Per-repetition execution timeout = test timeout * timeout_multiplier
+timeout_multiplier = 10.0
+# Minimum number of samples required for a trustworthy baseline / comparison.
+min_samples = 5
+benchmark_version = "v1"
+
+[regression]
+# A regression is reported only when BOTH the relative and noise-aware criteria hold:
+#   median_current > median_baseline * (1 + rel_threshold)
+#   and the excess exceeds max(abs_threshold_s, noise_k_mad * mad_baseline)
+rel_threshold = 0.20
+abs_threshold_s = 0.010
+noise_k_mad = 3.0
+
+[paths]
+# Relative paths are resolved against the project root.
+db = "artifacts/compreg.db"
+artifacts = "artifacts"
+
+[comparisons]
+# Require baselines recorded on the same machine/platform to be considered compatible.
+require_same_host = true
+
+[storage]
+# Keep compiled binaries of failed tests for diagnosis (logs are always kept).
+keep_failure_binaries = true
+log_level = "INFO"
