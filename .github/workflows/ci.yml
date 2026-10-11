@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    name: Linux - full pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package with dev tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Capability report
+        run: compreg doctor
+      - name: Unit and integration tests
+        run: pytest
+      - name: Differential verification sweep
+        run: compreg verify --opts O0,O2,O3
+      - name: Benchmark, baseline, compare
+        run: |
+          compreg benchmark --opts O2
+          compreg baseline create
+          compreg compare
+      - name: Reports
+        run: compreg report
+      - name: Native CTest suite
+        run: compreg ctest
+
+  ctest:
+    name: CTest only
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - run: compreg ctest
+
+  windows:
+    name: Windows - MSYS2 UCRT64 compile-verify + ctest
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: false
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+      - name: Put UCRT64 toolchain on PATH
+        shell: bash
+        run: echo "C:\msys64\ucrt64\bin" >> $GITHUB_PATH
+      - name: Install package (stdlib-only runtime; keeps MSYS2 cmake authoritative)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+      - name: Capability report
+        run: compreg doctor
+      - name: Compile-verify subset with real GCC
+        run: compreg verify --opts O0,O2 --tests arithmetic_int_basic sorting_bubble_sort structs_point_distance loops_collatz_lengths bench_int_workload
+      - name: Native CTest suite
+        run: compreg ctest
