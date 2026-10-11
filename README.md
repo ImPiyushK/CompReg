@@ -10,7 +10,7 @@ in SQLite, and produces structured failure evidence for triage.
 CI configured for GitHub Actions (Linux full pipeline + Windows MSYS2
 compile-verify + ctest-only job).
 
-**Scope statement (honest):** CompReg verifies *standard desktop toolchains*
+**Scope statement:** CompReg verifies *standard desktop toolchains*
 (GCC/Clang building for a host CPU). It does **not** verify NVIDIA's internal
 compilers, CUDA, PTX, or GPU instruction semantics — it is a transferable
 compiler-verification portfolio built around the same engineering practices
