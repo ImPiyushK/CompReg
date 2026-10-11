@@ -1,0 +1,8 @@
+after_set=80000021
+after_clear=80000001
+bits=101
+x=12 lowest=4 highest=8
+x=96 lowest=32 highest=64
+x=1024 lowest=1024 highest=1024
+x=4294967295 lowest=1 highest=2147483648
+x=0 lowest=0 highest=0

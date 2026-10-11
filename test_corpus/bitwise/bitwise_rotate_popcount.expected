@@ -1,0 +1,7 @@
+x=00000000 rot4=00000000 pop=0
+x=00000001 rot4=00000010 pop=1
+x=ffffffff rot4=ffffffff pop=32
+x=deadbeef rot4=eadbeefd pop=24
+x=80000000 rot4=00000008 pop=1
+x=0f0f0f0f rot4=f0f0f0f0 pop=16
+rot0equal=1

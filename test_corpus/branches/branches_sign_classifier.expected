@@ -1,0 +1,7 @@
+7:positive
+1:positive
+0:zero
+-1:negative
+-42:negative
+2147483646:positive
+-2147483647:negative
