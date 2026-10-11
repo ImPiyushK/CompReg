@@ -185,16 +185,3 @@ the design would extend, so the boundary is explicit:
 - The CPU-only constraint was a design choice to keep the portfolio runnable
   anywhere; nothing in the architecture assumes a CPU compiler beyond the
   two shipped adapters.
-
-## Documentation
-
-- [docs/architecture.md](docs/architecture.md) — module responsibilities
-- [docs/installation.md](docs/installation.md) — Windows / Linux / WSL setup
-- [docs/usage.md](docs/usage.md) — command reference + examples
-- [docs/testing.md](docs/testing.md) — test map + observed results
-- [docs/reporting.md](docs/reporting.md) — report schema + CSV columns
-- [docs/limitations.md](docs/limitations.md) — honest boundaries
-
-## License
-
-MIT — see [LICENSE](LICENSE).
